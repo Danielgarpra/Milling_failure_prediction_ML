@@ -4,16 +4,17 @@ import numpy as np
 
 # Cargar el modelo preentrenado
 @st.cache_resource  # Cachear el modelo para mejorar el rendimiento
-def load_model():
+def load_model(dir):
     try:
-        with open("./models/model_over.pkl", "rb") as file:
+        with open(dir, "rb") as file:
             model = pickle.load(file)
         return model
     except Exception as e:
         st.error(f"Error al cargar el modelo: {e}")
         return None
 
-model = load_model()
+model = load_model('./models/model_over.pkl')
+model_type= load_model('./models/model_types.keras')
 
 # Título de la app
 st.title("🔧 Predicción del Correcto Funcionamiento de tu Fresadora")
@@ -49,10 +50,34 @@ if submit:
         st.subheader("📢 Resultado de la Predicción")
         if prediction == 0:
             st.success("✅ La fresadora **funcionará correctamente**.")
+
         else:
             st.error("⚠️ **¡Cuidado!** Se prevé una **falla** en la fresadora.")
+
+            # Estudiamos el tipo de fallo que se va a producir:
+            features2 = np.array([[input_1, input_2, input_3, input_4, input_5, input_6_L, input_6_M, input_6_H]])
+            prediction2 = model_type.predict(features2)[0]
+            if prediction2[0]==1:
+                st.error('Se va a producir fallo por desgaste')
+                st.success("Cambia la herramienta")
+                #Aquí habrá que 'reiniciar' el proceso (tool wear)             
+            if prediction2[1]==1:
+                st.error('Se va a producir fallo por disipación de calor')
+                st.success("Haz algo para la temperatura")
+
+            if prediction2[2]==1:
+                st.error('Se va a producir fallo por potencia')
+                st.success("Cambia la velocidad rotacional")
+            if prediction2[3]==1:
+                st.error('Se va a producir fallo por sobreesfuerzo')
+                st.success("Baja el par torsión o cambia la herramienta")                
+
     except Exception as e:
         st.error(f"Error durante la predicción: {e}")
+
+
+
+
 
 # Footer
 st.markdown("---")
