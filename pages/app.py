@@ -87,10 +87,3 @@ if submit:
     except Exception as e:
         st.error(f"Error durante la predicción: {e}")
 
-
-
-
-
-# Footer
-st.markdown("---")
-st.markdown("🔍 **Futuras implementaciones:** Predicción del tipo de fallo (TWF, HDF, PWF, OSF).")

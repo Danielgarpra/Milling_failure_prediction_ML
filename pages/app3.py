@@ -5,7 +5,7 @@ from tensorflow import keras
 import plotly.graph_objects as go
 
 # Configuración de estilo
-st.set_page_config(page_title="Panel de Control Industrial", layout="wide")
+st.set_page_config(page_title="Panel de Control Industrial", layout="wide", page_icon="🏭")
 
 # Cargar el modelo preentrenado
 @st.cache_resource  # Cachear el modelo para mejorar el rendimiento
@@ -24,7 +24,7 @@ scaler = load_model('./models/scaler.pkl')
 
 # Título de la app
 st.markdown("""
-    <h1 style='text-align: center; color: orange;'>
+    <h1 style='text-align: center; color: #FFA500; font-family: Arial, sans-serif;'>
         🏭 Panel de Control - Predicción de Fallos en Fresadora
     </h1>
 """, unsafe_allow_html=True)
