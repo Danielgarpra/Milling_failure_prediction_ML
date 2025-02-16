@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import numpy as np
+from tensorflow import keras
 
 # Cargar el modelo preentrenado
 @st.cache_resource  # Cachear el modelo para mejorar el rendimiento
@@ -14,7 +15,7 @@ def load_model(dir):
         return None
 
 model = load_model('./models/model_over.pkl')
-model_type= load_model('./models/model_types.keras')
+model_type=keras.models.load_model('./models/model_types.keras')
 
 # Título de la app
 st.title("🔧 Predicción del Correcto Funcionamiento de tu Fresadora")
@@ -57,18 +58,18 @@ if submit:
             # Estudiamos el tipo de fallo que se va a producir:
             features2 = np.array([[input_1, input_2, input_3, input_4, input_5, input_6_L, input_6_M, input_6_H]])
             prediction2 = model_type.predict(features2)[0]
-            if prediction2[0]==1:
+            if prediction2[0]>0.5:
                 st.error('Se va a producir fallo por desgaste')
                 st.success("Cambia la herramienta")
                 #Aquí habrá que 'reiniciar' el proceso (tool wear)             
-            if prediction2[1]==1:
+            if prediction2[1]>0.5:
                 st.error('Se va a producir fallo por disipación de calor')
                 st.success("Haz algo para la temperatura")
 
-            if prediction2[2]==1:
+            if prediction2[2]>0.5:
                 st.error('Se va a producir fallo por potencia')
                 st.success("Cambia la velocidad rotacional")
-            if prediction2[3]==1:
+            if prediction2[3]>0.5:
                 st.error('Se va a producir fallo por sobreesfuerzo')
                 st.success("Baja el par torsión o cambia la herramienta")                
 
