@@ -35,7 +35,7 @@ scaler = load_model('./models/scaler.pkl')
 
 # Título de la app
 st.markdown("""
-    <h1 style='text-align: center; color: #bf1123; font-family: Arial, sans-serif;'>
+    <h1 style='text-align: center; color: #f70000; font-family: Arial, sans-serif;font-size: 56px;'>
         💡 OPERATOR PANEL 💡
     </h1>
 """, unsafe_allow_html=True)
@@ -115,7 +115,7 @@ with st.sidebar:
             min_value=0,
             max_value=70,
             track_color="white",
-            slider_color=('red', 'white'),
+            slider_color=('black', 'red'),
             thumb_color="orange",
             value_always_visible=True,
         )
@@ -125,13 +125,14 @@ with st.sidebar:
     input_6 = st.radio("🛠️ Type of tool", ["L", "M", "H"], horizontal=True)
 
 # Crear layout de columnas
-col1, col2 = st.columns([2, 2])
+col1, col2, col3= st.columns([2, 2, 1])
 
 with col1:
     fig2 = go.Figure(go.Indicator(
         mode="gauge+number",
         value=input_1,
-        title={"text": "🌡️ Air temperature (C)"},
+        number={'suffix': " ºC"},
+        title={"text": "🌡️ Air temperature"},
         gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
     ))
     st.plotly_chart(fig2)
@@ -150,19 +151,13 @@ with col1:
     ))
     st.plotly_chart(fig3)
 
-    fig5 = go.Figure(go.Indicator(
-        mode="number",
-        value=input_5,
-        number={'suffix': " Min", 'prefix': "⏱️"},
-        domain={'x': [0, 1], 'y': [0.6, 1]}
-    ))
-    st.plotly_chart(fig5)
 
 with col2:
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=input_2,
-        title={"text": "🔥 Process temperature (C)"},
+        number={'suffix': " ºC"},
+        title={"text": "🔥 Process temperature"},
         gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
     ))
     st.plotly_chart(fig)
@@ -181,6 +176,10 @@ with col2:
     ))
     st.plotly_chart(fig4)
 
+with col3:
+
+
+
     st.markdown(
         """
         <style>
@@ -198,9 +197,9 @@ with col2:
             text-align: center;
             font-size: 48px;
             font-weight: bold;
-            margin-top: 20px;
-            width: 180px;
-            height: 180px;
+            margin-top: 250px;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -214,6 +213,16 @@ with col2:
         f'<div class="contenedor-centrado"><div class="cuadrado-estrecho">{input_6}</div></div>',
         unsafe_allow_html=True,
     )
+
+    
+    fig5 = go.Figure(go.Indicator(
+        mode="number",
+        value=input_5,
+        number={'suffix': " Min", 'prefix': "⏱️"},
+        domain={'x': [0.2, 0.8], 'y': [0.2, 0.7]}
+    ))
+    st.plotly_chart(fig5)
+    
 
 col3, col4 = st.columns([2, 2])
 with col3:
