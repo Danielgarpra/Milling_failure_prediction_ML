@@ -35,14 +35,17 @@ scaler = load_model('./models/scaler.pkl')
 
 # Título de la app
 st.markdown("""
-    <h1 style='text-align: center; color: #f70000; font-family: Arial, sans-serif;font-size: 56px;'>
+    <h1 style='text-align: center; color: #BEBEBE; font-family: Serif, sans-serif;font-size: 65px;'>
         💡 OPERATOR PANEL 💡
+    <br>
     </h1>
 """, unsafe_allow_html=True)
 
 
 # Definir las métricas y simulaciones
-features = ["🌡️ Air temperature (C)", "🔥 Process temperature (C)", '⚙️ Rotational Speed (rpm)', "🔩 Torque (Nm)", "⌛ Tool Wear (min)", "🛠️ Type of tool"]
+data=[27,35,1000,20,0,'L']
+plus_time=0
+features = ["🌡️ ", "🔥 ", '⚙️ ', "🔩 ", "⌛ ", "🛠️ "]
 metric = ['ºC', 'ºC', 'rpm', 'Nm', 'min', 'type']
 sim1 = [27, 38, 2000, 40, 160, 'L']
 sim2 = [33, 40, 1000, 20, 230, 'M']
@@ -60,6 +63,7 @@ with col3:
 # Función para mostrar la barra de carga y los resultados
 def mostrar_simulacion(simulacion, datos):
     if simulacion:
+
         # Barra de carga
         progress_bar = st.progress(0)
         for i in range(100):
@@ -73,15 +77,31 @@ def mostrar_simulacion(simulacion, datos):
         columns = [col1, col2, col3, col4, col5, col6]
         for j, i, valor, colunm in zip(features, metric, datos, columns):
             with colunm:
-                st.write(f"{j}   : {valor if i == 'type' else f'{valor} {i}'}")
+                st.write(f"<p style='font-size: 30px;'>{j}   : {valor if i == 'type' else f'{valor} {i}'}</p>",unsafe_allow_html=True)
+    return datos
+
+
+def time_plus(data):
+    if data[5]=='L':
+        plus_time=2
+    elif data[5]=='M':
+        plus_time=3
+    elif data[5]=='H':
+        plus_time=5
+    return plus_time
 
 # Lógica para cada simulación
 if simulacion_1:
-    mostrar_simulacion(simulacion_1, sim1)
+    data=mostrar_simulacion(simulacion_1, sim1)
+    plus_time=time_plus(data)
+
 if simulacion_2:
-    mostrar_simulacion(simulacion_2, sim2)
+    data=mostrar_simulacion(simulacion_2, sim2)
+    plus_time=time_plus(data)
+
 if simulacion_3:
-    mostrar_simulacion(simulacion_3, sim3)
+    data=mostrar_simulacion(simulacion_3, sim3)
+    plus_time=time_plus(data)
 
 
 
@@ -91,12 +111,12 @@ with st.sidebar:
 
     with col1:
         input_1 = vertical_slider(
-            label="🌡️ Air temperature (C)",
+            label="🌡️ Air Tª(C)",
             key="vert_01",
-            height=300,
+            height=200,
             thumb_shape="circle",
             step=0.1,
-            default_value=25,
+            default_value=data[0]+1,
             min_value=0,
             max_value=70,
             track_color="white",
@@ -106,12 +126,12 @@ with st.sidebar:
         )
     with col2:
         input_2 = vertical_slider(
-            label="🔥 Process temperature (C)",
+            label="🔥 Process Tª(C)",
             key="vert_02",
-            height=300,
+            height=200,
             thumb_shape="circle",
             step=0.1,
-            default_value=25,
+            default_value=data[1]+2,
             min_value=0,
             max_value=70,
             track_color="white",
@@ -121,7 +141,7 @@ with st.sidebar:
         )
     input_3 = st.slider("⚙️ Rotational Speed (rpm)", 0.0, 5000.0, 1000.0, 1.0)
     input_4 = st.slider("🔩 Torque (Nm)", 0.0, 100.0, 40.0, 1.0)
-    input_5 = st.slider("⌛ Tool Wear (min)", 0.0, 500.0, 0.0, 1.0)
+    input_5 = st.slider("⌛ Tool Wear (min)", 0.0, 500.0, float(data[4]+plus_time), 1.0)
     input_6 = st.radio("🛠️ Type of tool", ["L", "M", "H"], horizontal=True)
 
 # Crear layout de columnas
@@ -129,9 +149,10 @@ col1, col2, col3= st.columns([2, 2, 1])
 
 with col1:
     fig2 = go.Figure(go.Indicator(
-        mode="gauge+number",
+        mode="gauge+number+delta",
         value=input_1,
         number={'suffix': " ºC"},
+        delta={'reference': data[0]},
         title={"text": "🌡️ Air temperature"},
         gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
     ))
@@ -144,7 +165,7 @@ with col1:
             'axis': {'range': [500, 5000]},
             'bar': {'color': "yellow"},
         },
-        delta={'reference': 1500},
+        delta={'reference': data[2]},
         value=input_3,
         domain={'x': [0.1, 1], 'y': [0.6, 1]},
         title={'text': "RPM"},
@@ -154,9 +175,10 @@ with col1:
 
 with col2:
     fig = go.Figure(go.Indicator(
-        mode="gauge+number",
+        mode="gauge+number+delta",
         value=input_2,
         number={'suffix': " ºC"},
+        delta={'reference': data[1]},
         title={"text": "🔥 Process temperature"},
         gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
     ))
@@ -169,7 +191,7 @@ with col2:
             'axis': {'range': [0, 100]},
             'bar': {'color': "gray"},
         },
-        delta={'reference': 20},
+        delta={'reference': data[3]},
         value=input_4,
         domain={'x': [0.1, 1], 'y': [0.6, 1]},
         title={'text': "Nm"},
@@ -197,7 +219,7 @@ with col3:
             text-align: center;
             font-size: 48px;
             font-weight: bold;
-            margin-top: 250px;
+            margin-top: 240px;
             width: 100px;
             height: 100px;
             display: flex;
@@ -258,7 +280,7 @@ with col3:
         '<div class="contenedor-centrado"><div class="boton-rojo">',
         unsafe_allow_html=True,
     )
-    submit = st.button("⚙️ SET",type='primary' ,use_container_width=True)
+    submit = st.button("📊 SET CONFIGURATION",type='primary' ,use_container_width=True)
     st.markdown('</div></div>', unsafe_allow_html=True)
 
 # Mapeo del tipo de herramienta
