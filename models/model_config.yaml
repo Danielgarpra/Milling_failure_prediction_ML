@@ -1,0 +1,12 @@
+pipeline:
+  steps:
+    - name: SelectKBest
+      parameters:
+        k: 'all'
+    - name: StandardScaler
+      parameters: {}
+    - name: SVC
+      parameters:
+        C: 100
+        probability: true
+        random_state: 42
