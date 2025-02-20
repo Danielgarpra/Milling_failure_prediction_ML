@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
 import numpy as np
-from tensorflow import keras
 import plotly.graph_objects as go
 from streamlit_vertical_slider import vertical_slider
 from time import sleep
@@ -30,8 +29,9 @@ def load_model(dir):
         return None
 
 model = load_model('./models/model_over.pkl')
-model_type = keras.models.load_model('./models/model_types.keras')
 scaler = load_model('./models/scaler.pkl')
+model_type = load_model('./models/model_types.keras')
+
 
 # Título de la app
 st.markdown("""
