@@ -30,8 +30,9 @@ def load_model(dir):
 
 model = load_model('./models/model_over.pkl')
 scaler = load_model('./models/scaler.pkl')
-model_type = load_model('./models/model_types.keras')
 
+with open("./models/model_types.keras", "rb") as f:
+    model_type = pickle.load(f, encoding="latin1")
 
 # Título de la app
 st.markdown("""
