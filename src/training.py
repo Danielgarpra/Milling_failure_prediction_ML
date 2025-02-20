@@ -134,7 +134,7 @@ predictions2=model2.predict(X_test)
 clf2.fit(X_under_resampled, y_under_resampled)
 model_under_resampled2=clf2.best_estimator_
 model_under_resampled2
-predictions_under2=model_under_resampled.predict(X_test)
+predictions_under2=model_under_resampled2.predict(X_test)
 
 clf2.fit(X_over_resampled, y_over_resampled)
 model_over_resampled2=clf2.best_estimator_
