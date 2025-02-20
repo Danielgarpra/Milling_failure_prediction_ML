@@ -1,6 +1,6 @@
 # Milling Machine Failure Prediction
 
-![image](https://github.com/user-attachments/assets/91441e8a-9eda-4e37-9a9d-0f42ef450ed0)
+![image](https://github.com/user-attachments/assets/e1f75a50-6874-4061-8f0d-7b3eca138d19)
 
 ## Project Overview
 This project focuses on predicting machine failures in a milling environment based on sensor data. The dataset includes various parameters such as rotational speed, torque, power, and tool wear, recorded over time until the failure occurs. The goal is to develop a predictive model that can accurately predict both the occurrence and type of machine failure, helping to prevent unexpected downtime and improve maintenance strategies.
