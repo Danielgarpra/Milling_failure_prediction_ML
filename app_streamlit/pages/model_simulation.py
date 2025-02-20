@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
 import numpy as np
-from tensorflow import keras
 import plotly.graph_objects as go
 from streamlit_vertical_slider import vertical_slider
 from time import sleep
@@ -30,7 +29,7 @@ def load_model(dir):
         return None
 
 model = load_model('./models/model_over.pkl')
-model_type = keras.models.load_model('./models/model_types.keras')
+model_type = load_model('./models/model_types.pkl')
 scaler = load_model('./models/scaler.pkl')
 
 # Título de la app
@@ -43,8 +42,6 @@ st.markdown("""
 
 
 # Definir las métricas y simulaciones
-data=[27,35,1000,20,0,'L']
-plus_time=0
 features = ["🌡️ ", "🔥 ", '⚙️ ', "🔩 ", "⌛ ", "🛠️ "]
 metric = ['ºC', 'ºC', 'rpm', 'Nm', 'min', 'type']
 sim1 = [25.65, 35.75, 1527, 32.4, 189, 'L']
@@ -95,15 +92,22 @@ if simulacion_1:
     data=mostrar_simulacion(simulacion_1, sim1)
     plus_time=time_plus(data)
 
+
 if simulacion_2:
     data=mostrar_simulacion(simulacion_2, sim2)
     plus_time=time_plus(data)
+
 
 if simulacion_3:
     data=mostrar_simulacion(simulacion_3, sim3)
     plus_time=time_plus(data)
 
 
+if simulacion_1 or simulacion_2 or simulacion_3:
+    None
+else:
+    data=[27,35,1000,20,0,'L']
+    plus_time=0
 
 
 with st.sidebar:

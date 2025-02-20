@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
 import numpy as np
-from tensorflow import keras
 import plotly.graph_objects as go
 from streamlit_vertical_slider import vertical_slider
 from time import sleep
@@ -30,7 +29,7 @@ def load_model(dir):
         return None
 
 model = load_model('./models/model_over.pkl')
-model_type = keras.models.load_model('./models/model_types.keras')
+model_type = load_model('./models/model_types.pkl')
 scaler = load_model('./models/scaler.pkl')
 
 # Título de la app
@@ -43,7 +42,7 @@ st.markdown("""
 
 
 # Definir las métricas y simulaciones
-data=[27,35,1000,20,0,'L']
+data=[27.0,35.0,1000.0,20.0,0.0,'L']
 plus_time=0
 features = ["🌡️ ", "🔥 ", '⚙️ ', "🔩 ", "⌛ ", "🛠️ "]
 metric = ['ºC', 'ºC', 'rpm', 'Nm', 'min', 'type']
@@ -78,70 +77,62 @@ def mostrar_simulacion(simulacion, datos):
         for j, i, valor, colunm in zip(features, metric, datos, columns):
             with colunm:
                 st.write(f"<p style='font-size: 30px;'>{j}   : {valor if i == 'type' else f'{valor} {i}'}</p>",unsafe_allow_html=True)
-    return datos
 
 
-def time_plus(data):
-    if data[5]=='L':
-        plus_time=2
-    elif data[5]=='M':
-        plus_time=3
-    elif data[5]=='H':
-        plus_time=5
-    return plus_time
 
 # Lógica para cada simulación
 if simulacion_1:
-    data=mostrar_simulacion(simulacion_1, sim1)
-    plus_time=time_plus(data)
+    mostrar_simulacion(simulacion_1, sim1)
 
 if simulacion_2:
-    data=mostrar_simulacion(simulacion_2, sim2)
-    plus_time=time_plus(data)
+    mostrar_simulacion(simulacion_2, sim2)
 
 if simulacion_3:
-    data=mostrar_simulacion(simulacion_3, sim3)
-    plus_time=time_plus(data)
-
+    mostrar_simulacion(simulacion_3, sim3)
 
 
 
 with st.sidebar:
-    col1, col2 = st.columns([1, 2])
+    col1, col2 = st.columns([2, 2])
 
     with col1:
         input_1 = vertical_slider(
             label="🌡️ Air Tª(C)",
             key="vert_01",
-            height=200,
+            height=250,
             thumb_shape="circle",
-            step=0.1,
-            default_value=data[0]+1,
-            min_value=0,
-            max_value=70,
+            step=0.01,
+            default_value=25.0,
+            min_value=20.0,
+            max_value=35.0,
             track_color="white",
             slider_color=('black', 'red'),
             thumb_color="orange",
             value_always_visible=True,
         )
+        input_1 = st.number_input("Air Tª(C)", min_value=20.0, max_value=35.0, value=input_1, step=0.01)
+    
     with col2:
         input_2 = vertical_slider(
             label="🔥 Process Tª(C)",
             key="vert_02",
-            height=200,
+            height=250,
             thumb_shape="circle",
-            step=0.1,
-            default_value=data[1]+2,
-            min_value=0,
-            max_value=70,
+            step=0.01,
+            default_value=35.0,
+            min_value=30.0,
+            max_value=45.0,
             track_color="white",
             slider_color=('black', 'red'),
             thumb_color="orange",
             value_always_visible=True,
         )
-    input_3 = st.slider("⚙️ Rotational Speed (rpm)", 0.0, 5000.0, 1000.0, 1.0)
-    input_4 = st.slider("🔩 Torque (Nm)", 0.0, 100.0, 40.0, 1.0)
-    input_5 = st.slider("⌛ Tool Wear (min)", 0.0, 500.0, float(data[4]+plus_time), 1.0)
+        input_2 = st.number_input("Process Tª(C)", min_value=30.0, max_value=45.0, value=input_2, step=0.01)
+
+
+    input_3 = st.slider("⚙️ Rotational Speed (rpm)", 1000.0, 3000.0, 1000.0, 1.0)
+    input_4 = st.slider("🔩 Torque (Nm)", 0.0, 90.0, 40.0, 0.1)
+    input_5 = st.slider("⌛ Tool Wear (min)", 0.0, 400.0, 0.0, 1.0)
     input_6 = st.radio("🛠️ Type of tool", ["L", "M", "H"], horizontal=True)
 
 # Crear layout de columnas
@@ -154,7 +145,7 @@ with col1:
         number={'suffix': " ºC"},
         delta={'reference': data[0]},
         title={"text": "🌡️ Air temperature"},
-        gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
+        gauge={"axis": {"range": [20, 35]}, "bar": {"color": "red"}}
     ))
     st.plotly_chart(fig2)
 
@@ -162,7 +153,7 @@ with col1:
         mode="number+gauge+delta",
         gauge={
             'shape': "bullet",
-            'axis': {'range': [500, 5000]},
+            'axis': {'range': [1000, 3000]},
             'bar': {'color': "yellow"},
         },
         delta={'reference': data[2]},
@@ -180,7 +171,7 @@ with col2:
         number={'suffix': " ºC"},
         delta={'reference': data[1]},
         title={"text": "🔥 Process temperature"},
-        gauge={"axis": {"range": [0, 70]}, "bar": {"color": "red"}}
+        gauge={"axis": {"range": [30, 45]}, "bar": {"color": "red"}}
     ))
     st.plotly_chart(fig)
 
@@ -188,7 +179,7 @@ with col2:
         mode="number+gauge+delta",
         gauge={
             'shape': "bullet",
-            'axis': {'range': [0, 100]},
+            'axis': {'range': [0, 90]},
             'bar': {'color': "gray"},
         },
         delta={'reference': data[3]},
@@ -290,33 +281,34 @@ input_6_L, input_6_M, input_6_H = tool_mapping[input_6]
 with col4:
     if submit:
         try:
-            features = np.array([[input_1 + 273.15, input_2 + 273.15, input_3, input_4, input_5, input_6_H, input_6_M, input_6_L]])
+            features = np.array([[input_1 + 273.15, input_2 + 273.15, input_3, input_4, input_5, input_6_H, input_6_L, input_6_M]])
             prediction = model.predict(features)[0]
             predict_proba = model.predict_proba(features)[0]
 
             st.markdown("### 📢 Resultado de la Predicción")
             if prediction == 0:
                 st.success("✅ La fresadora **funcionará correctamente**.")
-                st.success(f"Con un {predict_proba[0] * 100:.0f}% de probabilidad")
+                st.success(f"Con un {predict_proba[0] * 100:.1f}% de probabilidad")
             else:
                 st.error("⚠️ **¡Cuidado!** Se prevé una **falla** en la fresadora.")
-                st.error(f"Con un {predict_proba[1] * 100:.0f}% de probabilidad")
+                st.error(f"Con un {predict_proba[1] * 100:.1f}% de probabilidad")
 
-                features2 = np.array([[input_1, input_2, input_3, input_4, input_5, input_6_H, input_6_M, input_6_L]])
+                features2 = np.array([[input_1+ 273.15, input_2+ 273.15, input_3, input_4, input_5, input_6_H, input_6_L, input_6_M]])
                 prediction2 = model_type.predict(scaler.transform(features2))[0]
 
                 if prediction2[0] > 0.5:
-                    st.error('Se va a producir fallo por desgaste')
+                    st.error(f'Se va a producir fallo por desgaste ({prediction2[0]*100:.2f}%)')
                     st.success("Cambia la herramienta")
                 if prediction2[1] > 0.5:
-                    st.error('Se va a producir fallo por disipación de calor')
-                    st.success("Haz algo para la temperatura")
+                    st.error(f'Se va a producir fallo por disipación de calor ({prediction2[1]*100:.2f}%)')
+                    st.success("Controla la temperatura")
                 if prediction2[2] > 0.5:
-                    st.error('Se va a producir fallo por potencia')
+                    st.error(f'Se va a producir fallo por potencia ({prediction2[2]*100:.2f}%)')
                     st.success("Cambia la velocidad rotacional")
                 if prediction2[3] > 0.5:
-                    st.error('Se va a producir fallo por sobreesfuerzo')
+                    st.error(f'Se va a producir fallo por sobreesfuerzo ({prediction2[3]*100:.2f}%)')
                     st.success("Baja el par torsión o cambia la herramienta")
+
 
         except Exception as e:
             st.error(f"Error durante la predicción: {e}")
