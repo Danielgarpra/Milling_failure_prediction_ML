@@ -35,6 +35,7 @@ Target Variables:
 - Failure Type: Multi-class classification (TWF, HDF, PWF, OSF).
 
 Imbalance: The dataset is imbalanced, with more instances of operational states than failures, which requires handling techniques like oversampling or undersampling.
+URL: https://www.kaggle.com/datasets/stephanmatzka/predictive-maintenance-dataset-ai4i-2020 
 
 ## Data Preprocessing
 - Handling Missing Values: Checked for NaNs and ensured data consistency.
