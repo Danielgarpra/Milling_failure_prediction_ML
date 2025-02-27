@@ -44,51 +44,6 @@ st.markdown("""
 # Definir las métricas y simulaciones
 data=[27.0,35.0,1000.0,20.0,0.0,'L']
 plus_time=0
-features = ["🌡️ ", "🔥 ", '⚙️ ', "🔩 ", "⌛ ", "🛠️ "]
-metric = ['ºC', 'ºC', 'rpm', 'Nm', 'min', 'type']
-sim1 = [27, 38, 2000, 40, 160, 'L']
-sim2 = [33, 40, 1000, 20, 230, 'M']
-sim3 = [25, 36, 3000, 60, 40, 'H']
-
-# Crear las posibles simulaciones
-col1, col2, col3 = st.columns([2, 2, 2])
-with col1:
-    simulacion_1 = st.button("SIMULATION 1", use_container_width=True, type='secondary')
-with col2:
-    simulacion_2 = st.button("SIMULATION 2", use_container_width=True, type='secondary')
-with col3:
-    simulacion_3 = st.button("SIMULATION 3", use_container_width=True, type='secondary')
-
-# Función para mostrar la barra de carga y los resultados
-def mostrar_simulacion(simulacion, datos):
-    if simulacion:
-
-        # Barra de carga
-        progress_bar = st.progress(0)
-        for i in range(100):
-            sleep(0.02)  # Simular una carga
-            progress_bar.progress(i + 1)
-        progress_bar.empty()  # Ocultar la barra de carga
-
-        # Mostrar los resultados
-        st.subheader("Simulation:")
-        col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-        columns = [col1, col2, col3, col4, col5, col6]
-        for j, i, valor, colunm in zip(features, metric, datos, columns):
-            with colunm:
-                st.write(f"<p style='font-size: 30px;'>{j}   : {valor if i == 'type' else f'{valor} {i}'}</p>",unsafe_allow_html=True)
-
-
-
-# Lógica para cada simulación
-if simulacion_1:
-    mostrar_simulacion(simulacion_1, sim1)
-
-if simulacion_2:
-    mostrar_simulacion(simulacion_2, sim2)
-
-if simulacion_3:
-    mostrar_simulacion(simulacion_3, sim3)
 
 
 
