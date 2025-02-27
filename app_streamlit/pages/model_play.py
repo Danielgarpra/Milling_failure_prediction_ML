@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from streamlit_vertical_slider import vertical_slider
 from time import sleep
 
-# Configuración de estilo
+# Configuración de estilo de la página
 st.set_page_config(
     page_title="Milling machine performance prediction",
     layout="wide",
