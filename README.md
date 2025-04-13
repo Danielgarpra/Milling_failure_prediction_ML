@@ -47,7 +47,7 @@ URL: https://www.kaggle.com/datasets/stephanmatzka/predictive-maintenance-datase
 We used several machine learning models for classification, focusing on:
 
 - SVC
-- ANN
+- ANN  
 The models were evaluated based on metrics such as Accuracy, Recall, F1-Score, and ROC AUC.
 
 ## Model Selection Process:
